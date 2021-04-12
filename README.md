@@ -40,7 +40,7 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#Screenshots">Screenshots</a></li>
+    <li><a href="#Features">Screenshots</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -87,11 +87,16 @@ Currently, to use the app, python 3.9 is required to be installed on your machin
 
 
 
-## Screenshots
+## Features
 ![Home](assets/images/showcase/home.png)
+Simple and intuitive UI
 ![Sample Text](assets/images/showcase/sample-text.png)
+Text Size preview UI
 ![Colour Picker](assets/images/showcase/colour-picker.png)
+Multiple Colour settings
 ![Test Run](assets/images/showcase/test-run.png)
+Beautiful results
+
 
 
 <!-- CONTRIBUTING -->
