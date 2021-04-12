@@ -6,8 +6,6 @@
   <p align="center">
     A opensource imagewatermarking app.
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
-    ·
     <a href="https://github.com/YOULOF2/OpenWater/issues">Report Bug</a>
     ·
     <a href="https://github.com/YOULOF2/OpenWater/issues">Request Feature</a>
