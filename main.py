@@ -82,14 +82,17 @@ def generate_watermark(eventorigin):
         input_text = watermark_enter.get()
         chosen_font = search()
         colour_list = []
-        try:
-            for i in font_colour_rgb:
-                rounded_num = math.ceil(float(i))
-                colour_list.append(rounded_num)
-        except ValueError:
-            colour = font_colour_rgb
+        if font_colour_rgb is None:
+            colour = "black"
         else:
-            colour = tuple(colour_list)
+            try:
+                for i in font_colour_rgb:
+                    rounded_num = math.ceil(float(i))
+                    colour_list.append(rounded_num)
+            except ValueError:
+                colour = font_colour_rgb
+            else:
+                colour = tuple(colour_list)
         image_controller.text_to_image(font_name=chosen_font, text=input_text, coordinates=(cx, cy + 20), colour=colour,
                                        font_size=font_size)
         reinit_app(window)
