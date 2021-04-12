@@ -1,6 +1,5 @@
-[![Forks][forks-shield]][forks-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+[![Issues][issues-shield][https://github.com/YOULOF2/OpenWater/issues]
+[![MIT License][license-shield][https://github.com/YOULOF2/OpenWater/blob/master/LICENSE]
 
 <!-- PROJECT LOGO -->
 <br>
