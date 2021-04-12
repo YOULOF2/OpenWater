@@ -108,14 +108,14 @@ class ImageMaster:
         img = Image.new("RGBA", (self.width, self.height))
         draw = ImageDraw.Draw(img)
         draw.text(coordinates, text, colour, font=font)
-        img.rotate(rotation_angle).show()
+        final_img = img.rotate(rotation_angle)
         if len(self.preview_watermarks) == 0:
-            img.save("assets/images/preview_watermarks/watermark-1.png")
+            final_img.save("assets/images/preview_watermarks/watermark-1.png")
         else:
             last_img_name = self.get_last_preview_watermarks()
             splitted_img_name = last_img_name.stem.split("-")[1].split(".")[0]
             new_str = int(splitted_img_name) + 1
-            img.save(f"assets/images/preview_watermarks/watermark-{new_str}.png")
+            final_img.save(f"assets/images/preview_watermarks/watermark-{new_str}.png")
             self.preview_watermarks.reverse()
 
         self.refresh_pre_watermarks()
@@ -134,15 +134,18 @@ class ImageMaster:
 
     def save_image(self, save_to_loc):
         time = str(datetime.now().strftime("%I%p-%d-%m"))
-        max_no = 0
+        max_no = 1
         for file in self.preview_watermarks:
             splitted_file_no = int(file.stem.split("-")[1].split(".")[0])
             if splitted_file_no > max_no:
                 max_no = splitted_file_no
         original = f"{self.preview_img_loc}/preview_img-{max_no}.png"
         target = f"{save_to_loc}/{time}-watermarked.png"
-        shutil.copyfile(original, target)
-        self.clean_up()
+        try:
+            shutil.copyfile(original, target)
+            self.clean_up()
+        except FileNotFoundError:
+            pass
 
     def clean_up(self):
         for file in os.listdir(self.preview_watermarks_loc):

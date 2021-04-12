@@ -23,11 +23,13 @@ text_rotation_angle = 0
 def plus_angle():
     global text_rotation_angle
     text_rotation_angle += 10
+    rotation_label.config(text=f"{text_rotation_angle}°")
 
 
 def minus_angle():
     global text_rotation_angle
     text_rotation_angle -= 10
+    rotation_label.config(text=f"{text_rotation_angle}°")
 
 
 def change_notification_label(text):
@@ -67,7 +69,6 @@ def save_image():
     save_to_dir = filedialog.askdirectory()
     image_controller.save_image(save_to_dir)
     change_notification_label("Image Saved Succesfully.")
-    preview_img = image_controller.get_image_object()
 
 
 # function to be called when mouse is clicked
@@ -173,8 +174,6 @@ watermark_enter = ttk.Entry(image_controls_frame, width=51)
 watermark_enter.focus()
 
 font_frame = ttk.Frame(image_controls_frame)
-rotate_left = ttk.Button(font_frame, text="Rotate Watermark Left", width=23, command=minus_angle)
-rotate_right = ttk.Button(font_frame, text="Rotate Watermark Right", width=23, command=plus_angle)
 font_selector_dropdown = ttk.OptionMenu(font_frame, font_dropdown_variable, *font_list)
 font_selector_label = ttk.Label(font_frame)
 font_selector_label.config(text="Select a Font to Use", font=FONT_DATA)
@@ -190,11 +189,18 @@ font_size_scale.set(20)
 select_colour_btn = ttk.Button(font_frame, text="Select Font Colour", width=23, command=choose_color)
 select_colour_canvas = tk.Canvas(font_frame, width=153, height=20, bg=font_colour[1], highlightthickness=5)
 
+image_rotation_frame = ttk.Frame(font_frame)
+rotate_left = ttk.Button(image_rotation_frame, text="Rotate Left", width=20, command=minus_angle)
+rotate_right = ttk.Button(image_rotation_frame, text="Rotate Right", width=20, command=plus_angle)
+rotation_label = ttk.Label(image_rotation_frame, text=f"{text_rotation_angle}°", font=FONT_DATA)
+rotate_left.grid(row=0, column=0)
+rotate_right.grid(row=0, column=1)
+rotation_label.grid(row=0, column=2, padx=(10, 0))
+
 watermark_label.grid(row=0, column=0, columnspan=2)
 watermark_enter.grid(row=1, column=0, columnspan=2)
 
-rotate_right.grid(row=0, column=1)
-rotate_left.grid(row=0, column=0)
+image_rotation_frame.grid(row=0, column=0, columnspan=2, sticky=tk.W)
 font_selector_label.grid(row=1, column=0)
 font_selector_dropdown.grid(row=1, column=1)
 load_font.grid(row=2, column=0, columnspan=2)
