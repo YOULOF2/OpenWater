@@ -3,7 +3,7 @@
 [![MIT License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
-<br />
+<br>
 <p align="center">
   <a href="https://github.com/YOULOF2/OpenWater">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
@@ -90,12 +90,16 @@ Currently, to use the app, python 3.9 is required to be installed on your machin
 ## Features
 ![Home](assets/images/showcase/home.png)
 Simple and intuitive UI
+<br>
 ![Sample Text](assets/images/showcase/sample-text.png)
 Text Size preview UI
+<br>
 ![Colour Picker](assets/images/showcase/colour-picker.png)
 Multiple Colour settings
+<br>
 ![Test Run](assets/images/showcase/test-run.png)
 Beautiful results
+<br>
 
 
 
