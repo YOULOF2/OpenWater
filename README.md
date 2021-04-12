@@ -88,10 +88,10 @@ Currently, to use the app, python 3.9 is required to be installed on your machin
 
 
 ## Screenshots
-![Home](assets/images/showcase/home.png | width=100)
-![Sample Text](assets/images/showcase/sample-text.png | width=100)
-![Colour Picker](assets/images/showcase/colour-picker.png | width=100)
-![Test Run](assets/images/showcase/test-run.png | width=100)
+![Home](assets/images/showcase/home.png)
+![Sample Text](assets/images/showcase/sample-text.png)
+![Colour Picker](assets/images/showcase/colour-picker.png)
+![Test Run](assets/images/showcase/test-run.png)
 
 
 <!-- CONTRIBUTING -->
