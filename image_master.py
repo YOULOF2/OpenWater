@@ -4,6 +4,7 @@ import shutil
 from time import sleep
 from typing import Union
 from pathlib import Path
+from datetime import datetime
 
 
 class ImageMaster:
@@ -17,16 +18,21 @@ class ImageMaster:
         self.current_font_list = sorted(Path(self.custom_fonts_loc).iterdir(), key=os.path.getmtime)
         self.preview_watermarks = sorted(Path(self.preview_watermarks_loc).iterdir(), key=os.path.getmtime)
         self.width, self.height = self.get_internal_image()
+        self.image_scale = 1
         self.default_sizing = (self.default_sizing())
 
     def default_sizing(self):
         if int(self.width) > 2000:
+            self.image_scale = 6
             return int(self.width / 6), int(self.height / 6)
         elif 800 <= int(self.width) < 2000:
+            self.image_scale = 2
             return int(self.width / 2), int(self.height / 2)
         elif self.height > 800:
-            return int(self.width / 2), int(self.height / 2)
+            self.image_scale = 1.5
+            return int(self.width / 1.5), int(self.height / 1.5)
         else:
+            self.image_scale = 1
             return self.width, self.height
 
     def get_internal_image(self):
@@ -97,7 +103,6 @@ class ImageMaster:
         :return:
         """
         self.refresh_pre_watermarks()
-        print(f"Font Name ---> {font_name}")
         font = ImageFont.truetype(f"assets/fonts/uploaded_fonts/{font_name}", font_size)
         img = Image.new("RGBA", (self.width, self.height))
         draw = ImageDraw.Draw(img)
@@ -125,8 +130,19 @@ class ImageMaster:
                 max_no = splitted_file_no
         Image.alpha_composite(background, foreground).save(f"assets/images/preview_imgs/preview_img-{max_no}.png")
 
+    def save_image(self, save_to_loc):
+        time = str(datetime.now().strftime("%I%p-%d-%m"))
+        max_no = 0
+        for file in self.preview_watermarks:
+            splitted_file_no = int(file.stem.split("-")[1].split(".")[0])
+            if splitted_file_no > max_no:
+                max_no = splitted_file_no
+        original = f"{self.preview_img_loc}/preview_img-{max_no}.png"
+        target = f"{save_to_loc}/{time}-watermarked.png"
+        shutil.copyfile(original, target)
+        self.clean_up()
+
     def clean_up(self):
-        print(self.preview_watermarks_loc)
         for file in os.listdir(self.preview_watermarks_loc):
             os.remove(f"assets/images/preview_watermarks/{file}")
 

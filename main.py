@@ -1,3 +1,4 @@
+import os
 from image_master import ImageMaster
 from tkinter import ttk
 from tkinter import filedialog
@@ -5,16 +6,21 @@ import tkinter as tk
 from ttkthemes import ThemedTk
 import math
 from tkinter import colorchooser
+from tkinter import messagebox
 from reinit_app import reinit_app
 
 GREY = "#dddddd"
-FONT_DATA = ("Futura", 10, "normal")
+FONT_DATA = ("TkMenuFont", 10, "normal")
 window = ThemedTk(theme="arc", background=True)
-# window.iconphoto(False, tk.PhotoImage(file='/path/to/ico/icon.png'))
-window.title("Password Manager")
+window.iconphoto(False, tk.PhotoImage(file='assets/images/default_imgs/icon.png'))
+window.title("OpenWater")
 window.config(padx=50, pady=50)
 image_controller = ImageMaster()
 font_colour = ("black", "black")
+
+
+def change_notification_label(text):
+    notification_label.config(text=text)
 
 
 def choose_color():
@@ -37,40 +43,56 @@ def preview_font():
     font_preview_label.grid(row=0, column=0)
     note_preview_label = ttk.Label(font_preview_window, text="Note, some fonts don't work with the "
                                                              "text preview feature.\n"
-                                                             "It should aid in determining the c"
-                                                             "orrect font size of the watermark.\n"
+                                                             "It should aid in determining the "
+                                                             "correct font size of the watermark.\n"
                                                              "The selected fonts will work"
                                                              " in the watermark.",
-                                   font=("Futura", 10, "normal"))
+                                   font=FONT_DATA)
     note_preview_label.grid(row=1, column=0, pady=(5, 0))
 
 
+def save_image():
+    global preview_img
+    save_to_dir = filedialog.askdirectory()
+    image_controller.save_image(save_to_dir)
+    change_notification_label("Image Saved Succesfully.")
+    preview_img = image_controller.get_image_object()
+
 # function to be called when mouse is clicked
-def generate_watermark(event):
-    def search():
-        for i in image_controller.current_font_list:
-            if str(i).split("\\")[-1].upper().split(".")[0] == font_dropdown_variable.get().upper():
-                return str(i).split("\\")[-1]
-    # outputting x and y coords to console
-    event2canvas = lambda e, c: (c.canvasx(e.x), c.canvasy(e.y))
-    cx, cy = event2canvas(event, preview_img_canvas)
-    font_size = math.floor(font_size_var.get())
-    font_colour_rgb = font_colour[0]
-    # print(font_colour_rgb)
-    input_text = watermark_enter.get()
-    chosen_font = search()
-    print(chosen_font)
-    colour_list = []
-    try:
-        for i in font_colour_rgb:
-            rounded_num = math.ceil(float(i))
-            colour_list.append(rounded_num)
-    except ValueError:
-        colour = font_colour_rgb
+def generate_watermark(eventorigin):
+    if watermark_enter.get() == ".code__debug.":
+        cx = math.ceil(eventorigin.x * image_controller.image_scale)
+        cy = math.ceil(eventorigin.y * image_controller.image_scale) - 50
+        print(f"({cx}, {cy})")
+        change_notification_label(f"Coordinates of Click: ({cx}, {cy})")
+    elif watermark_enter.get() == ".code__cleanup.":
+        image_controller.clean_up()
     else:
-        colour = tuple(colour_list)
-    image_controller.text_to_image(font_name=chosen_font, text=input_text, coordinates=(cx, cy), colour=colour, font_size=font_size)
-    reinit_app(window)
+        def search():
+            for i in image_controller.current_font_list:
+                if str(i).split("\\")[-1].upper().split(".")[0] == font_dropdown_variable.get().upper():
+                    return str(i).split("\\")[-1]
+
+        # outputting x and y coords to console
+        cx = math.ceil(eventorigin.x * image_controller.image_scale)
+        cy = math.ceil(eventorigin.y * image_controller.image_scale) - 40
+        font_size = math.floor(font_size_var.get())
+        font_colour_rgb = font_colour[0]
+        # print(font_colour_rgb)
+        input_text = watermark_enter.get()
+        chosen_font = search()
+        colour_list = []
+        try:
+            for i in font_colour_rgb:
+                rounded_num = math.ceil(float(i))
+                colour_list.append(rounded_num)
+        except ValueError:
+            colour = font_colour_rgb
+        else:
+            colour = tuple(colour_list)
+        image_controller.text_to_image(font_name=chosen_font, text=input_text, coordinates=(cx, cy + 20), colour=colour,
+                                       font_size=font_size)
+        reinit_app(window)
 
 
 def font_scale(event):
@@ -79,14 +101,28 @@ def font_scale(event):
 
 
 def get_uploaded_img_location():
-    file_path = filedialog.askopenfilename(initialdir="/", title="Select Image File",
-                                           filetypes=(
-                                               ("jfif files", "*.jfif"), ("jpeg files", "*.jpg"),
-                                               ("png files", "*.png"),
-                                               ("all files", "*.*")))
-    if file_path != "":
-        image_controller.transfer_file(file_path, "img")
-        reinit_app(window)
+    if len(image_controller.preview_watermarks) > 0:
+        are_you_sure = messagebox.askyesno("Are you sure?", "Do you want to discard the changes made?")
+        if are_you_sure:
+            file_path = filedialog.askopenfilename(initialdir="/", title="Select Image File",
+                                                   filetypes=(
+                                                       ("jfif files", "*.jfif"), ("jpeg files", "*.jpg"),
+                                                       ("png files", "*.png"),
+                                                       ("all files", "*.*")))
+            if file_path != "":
+                image_controller.transfer_file(file_path, "img")
+                image_controller.clean_up()
+                reinit_app(window)
+    else:
+        file_path = filedialog.askopenfilename(initialdir="/", title="Select Image File",
+                                               filetypes=(
+                                                   ("jfif files", "*.jfif"), ("jpeg files", "*.jpg"),
+                                                   ("png files", "*.png"),
+                                                   ("all files", "*.*")))
+        if file_path != "":
+            image_controller.transfer_file(file_path, "img")
+            image_controller.clean_up()
+            reinit_app(window)
 
 
 def get_uploaded_font_location():
@@ -159,10 +195,12 @@ image_controls_frame.grid(row=1, column=1, pady=(0, image_controller.default_siz
 
 
 file_options = ttk.Frame(master_controls_frame)
+notification_label = ttk.Label(file_options, text="", font=FONT_DATA)
 upload_img_btn = ttk.Button(file_options, text="Load Image", width=48, command=get_uploaded_img_location)
-save_img_btn = ttk.Button(file_options, text="Save Image", width=48, command=image_controller.clean_up)
-upload_img_btn.grid(row=0, column=0)
-save_img_btn.grid(row=1, column=0)
+save_img_btn = ttk.Button(file_options, text="Save Image", width=48, command=save_image)
+notification_label.grid(row=0, column=0)
+upload_img_btn.grid(row=1, column=0)
+save_img_btn.grid(row=2, column=0)
 file_options.grid(row=2, column=1)
 
 # -------------------------------------------------------------------------------------------------------------------- #
@@ -175,8 +213,8 @@ preview_img_canvas = tk.Canvas(preview_frame,
                                height=(image_controller.default_sizing[1]),
                                highlightthickness=1)
 preview_img = image_controller.get_image_object()
-preview_img_canvas.create_image(image_controller.default_sizing[0] / 2, image_controller.default_sizing[1] / 2,
-                                image=preview_img)
+preview_img_canvas.create_image(image_controller.default_sizing[0], image_controller.default_sizing[1],
+                                image=preview_img, anchor=tk.SE)
 preview_img_canvas.grid(row=0, column=0)
 preview_frame.grid(row=0, column=0, padx=(0, 50), rowspan=5)
 
