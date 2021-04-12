@@ -17,6 +17,17 @@ window.title("OpenWater")
 window.config(padx=50, pady=50)
 image_controller = ImageMaster()
 font_colour = ("black", "black")
+text_rotation_angle = 0
+
+
+def plus_angle():
+    global text_rotation_angle
+    text_rotation_angle += 10
+
+
+def minus_angle():
+    global text_rotation_angle
+    text_rotation_angle -= 10
 
 
 def change_notification_label(text):
@@ -58,8 +69,10 @@ def save_image():
     change_notification_label("Image Saved Succesfully.")
     preview_img = image_controller.get_image_object()
 
+
 # function to be called when mouse is clicked
 def generate_watermark(eventorigin):
+    print(text_rotation_angle)
     if watermark_enter.get() == ".code__debug.":
         cx = math.ceil(eventorigin.x * image_controller.image_scale)
         cy = math.ceil(eventorigin.y * image_controller.image_scale) - 50
@@ -94,7 +107,7 @@ def generate_watermark(eventorigin):
             else:
                 colour = tuple(colour_list)
         image_controller.text_to_image(font_name=chosen_font, text=input_text, coordinates=(cx, cy + 20), colour=colour,
-                                       font_size=font_size)
+                                       font_size=font_size, rotation_angle=text_rotation_angle)
         reinit_app(window)
 
 
@@ -160,8 +173,8 @@ watermark_enter = ttk.Entry(image_controls_frame, width=51)
 watermark_enter.focus()
 
 font_frame = ttk.Frame(image_controls_frame)
-rotate_left = ttk.Button(font_frame, text="Rotate Watermark Left", width=23)
-rotate_right = ttk.Button(font_frame, text="Rotate Watermark Right", width=23)
+rotate_left = ttk.Button(font_frame, text="Rotate Watermark Left", width=23, command=minus_angle)
+rotate_right = ttk.Button(font_frame, text="Rotate Watermark Right", width=23, command=plus_angle)
 font_selector_dropdown = ttk.OptionMenu(font_frame, font_dropdown_variable, *font_list)
 font_selector_label = ttk.Label(font_frame)
 font_selector_label.config(text="Select a Font to Use", font=FONT_DATA)

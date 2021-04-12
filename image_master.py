@@ -87,19 +87,20 @@ class ImageMaster:
             return ImageTk.PhotoImage(Image.open(self.default_img)
                                       .resize(self.default_sizing, Image.ANTIALIAS))
 
-    def text_to_image(self, font_name: str, text: str, coordinates: tuple, colour: Union[str, tuple], font_size: int, ):
+    def text_to_image(self, font_name: str, text: str, coordinates: tuple, colour: Union[str, tuple], font_size: int,
+                      rotation_angle):
         """
         This method does 2 things:
         1. It takes the parameters given and generates a transparent image with text ton it
         2. It then merges the uploaded image with the generated transparent watermark image and saves it.
 
         If colour arguement is None, defaults to the colour black
+        :param rotation_angle:
         :param font_name:
         :param text:
         :param coordinates:
         :param colour:
         :param font_size:
-        :param rotation:
         :return:
         """
         self.refresh_pre_watermarks()
@@ -107,6 +108,7 @@ class ImageMaster:
         img = Image.new("RGBA", (self.width, self.height))
         draw = ImageDraw.Draw(img)
         draw.text(coordinates, text, colour, font=font)
+        img.rotate(rotation_angle).show()
         if len(self.preview_watermarks) == 0:
             img.save("assets/images/preview_watermarks/watermark-1.png")
         else:
