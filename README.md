@@ -9,7 +9,7 @@ Made using :
 * Pillow
 
 ## What I want to achieve with the OpenWater project?
-I want to see OpenWater oneday become stable and powerful enough for the normal jow to use
+I want to see OpenWater oneday become stable and powerful enough for the normal joe to use
 
 ## Contribution
 I encourage the aid of the community and other contributers .
