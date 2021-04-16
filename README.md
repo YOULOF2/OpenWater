@@ -41,7 +41,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-#OpenWater
+# OpenWater
 
 An Opensource image watermarking app that I decided to make, in more than **30 Hours**.
 
